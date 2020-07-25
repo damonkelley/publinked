@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LinkControllerTest(@Autowired val browser: MockMvc) {
+class AnonymousIntegrationTest(@Autowired val browser: MockMvc) {
     @Serializable
     data class Link(val href: String, val id: String? = null)
 
@@ -30,7 +30,7 @@ class LinkControllerTest(@Autowired val browser: MockMvc) {
 
         val result =
             browser
-                .post("/") {
+                .post("/api/links") {
                     content = json
                     contentType = MediaType.APPLICATION_JSON
                 }
@@ -49,7 +49,7 @@ class LinkControllerTest(@Autowired val browser: MockMvc) {
         val json = json { "href" to "https://example.com/cat-picture" }
 
         browser
-            .post("/") {
+            .post("/api/links") {
                 content = json
                 contentType = MediaType.APPLICATION_JSON
             }
@@ -57,6 +57,32 @@ class LinkControllerTest(@Autowired val browser: MockMvc) {
             .andExpect {
                 jsonPath("$.href") { value("https://example.com/cat-picture") }
                 jsonPath("$.id") { isString }
+            }
+    }
+
+    @Test
+    fun `when a link exists, you can get information about it`() {
+        val json = json { "href" to "http://example.com" }
+
+        val result =
+            browser
+                .post("/api/links") {
+                    content = json
+                    contentType = MediaType.APPLICATION_JSON
+                }
+                .andReturn()
+
+        val newLink =
+            result.response.contentAsString.let {
+                Json(JsonConfiguration.Stable).parse(Link.serializer(), it)
+            }
+
+        browser.get("/api/links/${newLink.id}")
+            .andExpect { status { isOk } }
+            .andExpect {
+                jsonPath("$.followed_count") {
+                    isNumber
+                }
             }
     }
 }
