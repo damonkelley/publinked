@@ -6,5 +6,5 @@ import org.springframework.boot.runApplication
 @SpringBootApplication class PublinkedApplication
 
 fun main(args: Array<String>) {
-  runApplication<PublinkedApplication>(*args)
+    runApplication<PublinkedApplication>(*args)
 }

@@ -7,7 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
     kotlin("plugin.serialization") version "1.3.70"
-    id("com.diffplug.spotless") version "5.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
 group = "com.damonkelley"
@@ -53,10 +53,6 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict", "-Xopt-in=kotlinx.serialization.ImplicitReflectionSerializer")
         jvmTarget = "11"
     }
-}
 
-configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-    kotlin {
-        ktfmt()
-    }
+    dependsOn(":ktlintFormat")
 }
