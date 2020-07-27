@@ -12,7 +12,7 @@ import java.net.URI
 class FollowLinkController(val repository: LinkRepository) {
     @GetMapping("/{id}")
     fun follow(@PathVariable id: String): ResponseEntity<Any> {
-        return FollowLink<ResponseEntity<Any>>(repository).interact(id, ::present)
+        return FollowLink(repository).interact(id, ::present)
     }
 
     private fun present(link: Link?): ResponseEntity<Any> {

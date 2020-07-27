@@ -22,6 +22,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -41,7 +42,12 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:4.1.3")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:4.1.3")
+    testImplementation("io.kotest:kotest-runner-console-jvm:4.1.3")
 }
 
 tasks.withType<Test> {

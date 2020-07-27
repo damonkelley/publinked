@@ -1,6 +1,7 @@
 package com.damonkelley.publinked
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.json.json
@@ -18,6 +19,9 @@ import org.springframework.test.web.servlet.post
 class AnonymousIntegrationTest(@Autowired val browser: MockMvc) {
     @Serializable
     data class Link(val href: String, val id: String? = null)
+
+    @OptIn(UnstableDefault::class)
+    val json = Json(JsonConfiguration(ignoreUnknownKeys = true))
 
     @Test
     fun `when the link does not exist, it will return not found`() {
@@ -38,7 +42,7 @@ class AnonymousIntegrationTest(@Autowired val browser: MockMvc) {
 
         val newLink =
             result.response.contentAsString.let {
-                Json(JsonConfiguration.Stable).parse(Link.serializer(), it)
+                this.json.parse(Link.serializer(), it)
             }
 
         browser.get("/${newLink.id}").andExpect { status { is3xxRedirection } }
@@ -74,15 +78,13 @@ class AnonymousIntegrationTest(@Autowired val browser: MockMvc) {
 
         val newLink =
             result.response.contentAsString.let {
-                Json(JsonConfiguration.Stable).parse(Link.serializer(), it)
+                this.json.parse(Link.serializer(), it)
             }
 
         browser.get("/api/links/${newLink.id}")
             .andExpect { status { isOk } }
             .andExpect {
-                jsonPath("$.followed_count") {
-                    isNumber
-                }
+                jsonPath("$.followed_count") { value(1) }
             }
     }
 }
