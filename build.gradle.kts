@@ -35,19 +35,24 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
+
     testImplementation("io.kotest:kotest-runner-junit5-jvm:4.1.3")
     testImplementation("io.kotest:kotest-assertions-core-jvm:4.1.3")
     testImplementation("io.kotest:kotest-runner-console-jvm:4.1.3")
+    testImplementation("io.kotest:kotest-extensions-spring:4.1.3")
 }
 
 tasks.withType<Test> {
