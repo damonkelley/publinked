@@ -83,8 +83,6 @@ class AnonymousIntegrationTest(@Autowired val browser: MockMvc) {
 
         browser.get("/api/links/${newLink.id}")
             .andExpect { status { isOk } }
-            .andExpect {
-                jsonPath("$.followed_count") { value(1) }
-            }
+            .andExpect { jsonPath("$.summary") { isArray } }
     }
 }

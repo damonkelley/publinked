@@ -9,7 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
-class LinkRepositoryTest(@Autowired val repository: LinkRepository, @Autowired val summarizedLinkRepository: SummarizedLinkRepository) {
+class LinkRepositoryTest(
+    @Autowired val repository: LinkRepository,
+    @Autowired val summarizedLinkRepository: SummarizedLinkRepository
+) {
     @Test
     fun `it will save and fetch the associated activities`() {
         val link = repository.save(
