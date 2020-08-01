@@ -49,10 +49,11 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
 
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:4.1.3")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:4.1.3")
-    testImplementation("io.kotest:kotest-runner-console-jvm:4.1.3")
-    testImplementation("io.kotest:kotest-extensions-spring:4.1.3")
+    val kotestVersion = "4.1.3"
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-runner-console-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-extensions-spring:$kotestVersion")
 }
 
 tasks.withType<Test> {

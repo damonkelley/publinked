@@ -12,20 +12,21 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/links")
-class LinkController(val repository: LinkRepository, val summarizedLinkRepository: SummarizedLinkRepository) {
+class LinkController(
+    val repository: LinkRepository,
+    val summarizedLinkRepository: SummarizedLinkRepository
+) {
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): ResponseEntity<Any> {
-        return summarizedLinkRepository.findByIdOrNull(id)?.let { ResponseEntity<Any>(it, HttpStatus.OK) }
+        return summarizedLinkRepository.findByIdOrNull(id)
+            ?.let { ResponseEntity<Any>(it, HttpStatus.OK) }
             ?: ResponseEntity(HttpStatus.NOT_FOUND)
     }
 
     @PostMapping
     fun create(@RequestBody link: Link): ResponseEntity<Any> {
-        return repository.save(link).let {
-            ResponseEntity(
-                it,
-                HttpStatus.CREATED
-            )
-        }
+        return repository.save(link)
+            .let { summarizedLinkRepository.findByIdOrNull(link.id!!) }
+            .let { ResponseEntity(it, HttpStatus.CREATED) }
     }
 }
