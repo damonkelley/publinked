@@ -19,8 +19,8 @@ fun containActivities(names: Collection<String>) = object : Matcher<Collection<A
 class FollowLinkTest : DescribeSpec({
     context("when a link is followed") {
         it("will add a followed activity") {
-            val repository = FakeRepository(mutableListOf(Link(href = "http://example.com", id = "id")))
-            val result = FollowLink(repository).interact("id") { it }!!
+            val repository = FakeRepository(mutableListOf(Link(href = "http://example.com", name = "name", id = "id")))
+            val result = FollowLink(repository).interact(name = "name") { it }!!
 
             result.activities should containActivities(listOf("saved", "followed"))
         }
@@ -28,6 +28,10 @@ class FollowLinkTest : DescribeSpec({
 })
 
 class FakeRepository(private val links: MutableList<Link>) : LinkRepository {
+    override fun findByName(name: String): Link? {
+        return links.find { it.name == name }
+    }
+
     override fun <S : Link?> save(entity: S): S {
         if (entity == null)
             throw error("entity can't be null")

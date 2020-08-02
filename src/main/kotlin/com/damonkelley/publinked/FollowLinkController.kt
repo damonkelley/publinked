@@ -10,9 +10,9 @@ import java.net.URI
 
 @RestController
 class FollowLinkController(val repository: LinkRepository) {
-    @GetMapping("/{id}")
-    fun follow(@PathVariable id: String): ResponseEntity<Any> {
-        return FollowLink(repository).interact(id, ::present)
+    @GetMapping("/{name}")
+    fun follow(@PathVariable name: String): ResponseEntity<Any> {
+        return FollowLink(repository).interact(name, ::present)
     }
 
     private fun present(link: Link?): ResponseEntity<Any> {

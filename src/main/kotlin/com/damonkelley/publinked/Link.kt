@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.util.Date
 import java.util.Optional
+import java.util.UUID
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -26,6 +27,8 @@ data class Link(
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     val id: String? = null,
+
+    val name: String = UUID.randomUUID().toString(),
 
     val href: String? = null,
 
@@ -76,13 +79,20 @@ data class SummarizedLink(
     val href: String,
     @Id
     val id: String,
+    val name: String,
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "linkId")
     val summary: List<ActivitySummary>
 )
 
-interface LinkRepository : CrudRepository<Link, String>
+interface LinkRepository : CrudRepository<Link, String> {
+    fun findByName(name: String): Link?
+}
+
 interface SummarizedLinkRepository : CrudRepository<SummarizedLink, String> {
-    @Query("FROM SummarizedLink link JOIN FETCH link.summary")
+    @Query("FROM SummarizedLink link LEFT JOIN FETCH link.summary")
     override fun findById(id: String): Optional<SummarizedLink>
+
+    @Query("FROM SummarizedLink link LEFT JOIN FETCH link.summary WHERE link.name = :name")
+    fun findByName(name: String): SummarizedLink?
 }

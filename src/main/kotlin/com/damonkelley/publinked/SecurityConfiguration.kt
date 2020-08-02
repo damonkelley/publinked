@@ -9,7 +9,9 @@ import org.springframework.security.config.web.servlet.invoke
 class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http {
-            anonymous {}
+            authorizeRequests {
+                authorize(anyRequest, permitAll)
+            }
             csrf { disable() }
         }
     }
