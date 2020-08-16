@@ -1,5 +1,9 @@
-package com.damonkelley.publinked
+package com.damonkelley.publinked.adapters.incoming.web
 
+import com.damonkelley.publinked.adapters.outgoing.persistence.LinkEntity
+import com.damonkelley.publinked.adapters.outgoing.persistence.LinkRepository
+import com.damonkelley.publinked.adapters.outgoing.persistence.SummarizedLinkEntity
+import com.damonkelley.publinked.adapters.outgoing.persistence.SummarizedLinkRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -25,7 +29,7 @@ class LinkController(
     }
 
     @PostMapping
-    fun create(@RequestBody link: Link, authentication: Authentication?) =
+    fun create(@RequestBody link: LinkEntity, authentication: Authentication?) =
         when (authentication) {
             null -> CreateAnonymousLink(repository, summarizedLinkRepository).interact(link) {
                 ResponseEntity(it, HttpStatus.CREATED)
@@ -40,7 +44,7 @@ class CreateAnonymousLink(
     private val writer: LinkRepository,
     private val reader: SummarizedLinkRepository
 ) {
-    fun <T> interact(link: Link, present: (SummarizedLink?) -> T): T {
+    fun <T> interact(link: LinkEntity, present: (SummarizedLinkEntity?) -> T): T {
         return link.copy(name = UUID.randomUUID().toString())
             .let { writer.save(it) }
             .let { reader.findByName(it.name) }
@@ -52,7 +56,7 @@ class CreateNamedLink(
     private val writer: LinkRepository,
     private val reader: SummarizedLinkRepository
 ) {
-    fun <T> interact(link: Link, present: (SummarizedLink?) -> T): T {
+    fun <T> interact(link: LinkEntity, present: (SummarizedLinkEntity?) -> T): T {
         return writer.save(link)
             .let { reader.findByName(it.name) }
             .let { present(it) }
